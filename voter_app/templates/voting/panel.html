@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मतदान पैनल - {{ voter.voter_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        .header-bar {
+            background: #ffffff;
+            padding: 18px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .voter-info h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #0f172a;
+        }
+        .voter-info p {
+            margin: 4px 0 0 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .logout-btn {
+            background-color: #ef4444;
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .alert-success {
+            background-color: #dcfce7;
+            color: #166534;
+            border-left: 5px solid #16a34a;
+        }
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-left: 5px solid #dc2626;
+        }
+        .category-box {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+        .category-box h3 {
+            margin-top: 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            color: #1e293b;
+        }
+        .voted-badge {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid #bfdbfe;
+        }
+        .candidate-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .candidate-option:hover {
+            border-color: #2563eb;
+            background-color: #f8fafc;
+        }
+        .candidate-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .candidate-left input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .candidate-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #cbd5e1;
+        }
+        .candidate-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .candidate-symbol {
+            font-size: 14px;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .submit-btn {
+            background-color: #16a34a;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .submit-btn:hover {
+            background-color: #15803d;
+        }
+        .done-banner {
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .done-banner a {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ऊपर वोटर की जानकारी और लॉगआउट बटन -->
+    <div class="header-bar">
+        <div class="voter-info">
+            <h2>स्वागत है, {{ voter.voter_name }}</h2>
+            <p>SVN: <strong>{{ voter.svn_no }}</strong> | पिता/पति: {{ voter.guardian_name|default:"-" }} | वर्ग: {{ voter.category|default:"-" }}</p>
+        </div>
+        <a href="{% url 'voter_logout' %}" class="logout-btn">लॉगआउट / अगला वोटर →</a>
+    </div>
+
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }}">
+                {{ msg }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- अगर दोनों कैटेगरी में वोट दे दिया है -->
+    {% if voted_general and voted_obc %}
+        <div class="done-banner">
+            <h3>🎉 धन्यवाद! आपने दोनों कैटेगरी (General और OBC) में अपना मतदान पूरा कर लिया है।</h3>
+            <a href="{% url 'voter_logout' %}">अगले वोटर के लिए लॉगिन पेज पर जाएं</a>
+        </div>
+        <br>
+    {% endif %}
+
+    <!-- 1. General Category Section -->
+    <div class="category-box">
+        <h3>1. General कैटेगरी चुनाव</h3>
+        {% if voted_general %}
+            <div class="voted-badge">
+                ✅ आपने General कैटेगरी में अपना वोट सफलतापूर्वक दे दिया है।
+            </div>
+        {% else %}
+            {% if general_candidates %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for c in general_candidates %}
+                        <label class="candidate-option">
+                            <div class="candidate-left">
+                                <input type="radio" name="candidate_id" value="{{ c.id }}" required>
+                                {% if c.photo %}
+                                    <img src="{{ c.photo.url }}" alt="{{ c.name }}" class="candidate-photo">
+                                {% endif %}
+                                <span class="candidate-name">{{ c.name }}</span>
+                            </div>
+                            <span class="candidate-symbol">चिन्ह: {{ c.symbol_name|default:"कोई नहीं" }}</span>
+                        </label>
+                    {% endfor %}
+                    <button type="submit" class="submit-btn">General वोट सबमिट करें</button>
+                </form>
+            {% else %}
+                <p style="color: #64748b;">इस कैटेगरी में अभी कोई उम्मीदवार नहीं जोड़ा गया है।</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- 2. OBC Category Section -->
+    <div class="category-box">
+        <h3>2. OBC कैटेगरी चुनाव</h3>
+        {% if voted_obc %}
+            <div class="voted-badge">
+                ✅ आपने OBC कैटेगरी में अपना वोट सफलतापूर्वक दे दिया है।
+            </div>
+        {% else %}
+            {% if obc_candidates %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for c in obc_candidates %}
+                        <label class="candidate-option">
+                            <div class="candidate-left">
+                                <input type="radio" name="candidate_id" value="{{ c.id }}" required>
+                                {% if c.photo %}
+                                    <img src="{{ c.photo.url }}" alt="{{ c.name }}" class="candidate-photo">
+                                {% endif %}
+                                <span class="candidate-name">{{ c.name }}</span>
+                            </div>
+                            <span class="candidate-symbol">चिन्ह: {{ c.symbol_name|default:"कोई नहीं" }}</span>
+                        </label>
+                    {% endfor %}
+                    <button type="submit" class="submit-btn">OBC वोट सबमिट करें</button>
+                </form>
+            {% else %}
+                <p style="color: #64748b;">इस कैटेगरी में अभी कोई उम्मीदवार नहीं जोड़ा गया है।</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

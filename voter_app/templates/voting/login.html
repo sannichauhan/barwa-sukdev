@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मतदान लॉगिन - चुनाव प्रणाली</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            margin: 0 0 8px 0;
+            color: #0f172a;
+            text-align: center;
+        }
+        p.subtitle {
+            color: #64748b;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 18px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #2563eb;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #dc2626;
+        }
+        .alert-success, .alert-info {
+            background-color: #dcfce7;
+            color: #166534;
+            border-left: 4px solid #16a34a;
+        }
+        .footer-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .footer-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🗳️ मतदान लॉगिन</h2>
+    <p class="subtitle">वोट डालने के लिए अपना SVN नंबर दर्ज करें</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="svn_no">SVN नंबर (वोटर आईडी)</label>
+        <input
+            type="text"
+            id="svn_no"
+            name="svn_no"
+            placeholder="उदाहरण: SVN1001"
+            required
+            autofocus
+        >
+        <button type="submit">मतदान के लिए आगे बढ़ें</button>
+    </form>
+
+    <div class="footer-link">
+        <a href="{% url 'election_results' %}">लाइव चुनाव परिणाम देखें →</a>
+    </div>
+</div>
+
+</body>
+</html>

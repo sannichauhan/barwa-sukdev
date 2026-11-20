@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Election Survey</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <h3 class="mb-4">निर्वाचन सर्वेक्षण (Election Survey)</h3>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Step 1: Category Selection (केवल एक ही category चुनने के लिए) -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <label class="form-label fw-bold">1. चुनाव वर्ग चुनें (Select Category):</label>
+            <div class="btn-group w-100" role="group">
+                {% for value, label in categories %}
+                    <a href="?category={{ value }}" 
+                       class="btn {% if selected_category == value %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        {{ label }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2 & 3: Candidate & Multiple Voters Selection -->
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="election_category" value="{{ selected_category }}">
+
+        <!-- Candidate Selection -->
+        <div class="card mb-4">
+            <div class="card-header fw-bold">
+                2. प्रत्याशी चुनें ({{ selected_category|upper }} Candidate)
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for candidate in candidates %}
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check border p-3 rounded bg-white">
+                                <input class="form-check-input" type="radio" name="candidate" 
+                                       id="cand_{{ candidate.id }}" value="{{ candidate.id }}" required>
+                                <label class="form-check-label fw-bold" for="cand_{{ candidate.id }}">
+                                    {{ candidate.name }} 
+                                    {% if candidate.symbol_name %}
+                                        <span class="badge bg-secondary">{{ candidate.symbol_name }}</span>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-danger">इस वर्ग में कोई प्रत्याशी उपलब्ध नहीं है।</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Multiple Voters Selection -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="fw-bold">3. मतदाता चुनें (Multiple Select) - कुल शेष: {{ voters.count }}</span>
+                <input type="text" id="voterSearch" class="form-control w-50" placeholder="नाम, मकान नं. या SVN से खोजें...">
+            </div>
+            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-hover mb-0" id="voterTable">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>मकान नं.</th>
+                            <th>नाम</th>
+                            <th>पिता/पति</th>
+                            <th>SVN No.</th>
+                            <th>जाति / वर्ग</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for voter in voters %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="voters" value="{{ voter.id }}" class="voter-checkbox">
+                            </td>
+                            <td>{{ voter.house_no|default:"-" }}</td>
+                            <td class="fw-bold">{{ voter.voter_name }}</td>
+                            <td>{{ voter.guardian_name|default:"-" }}</td>
+                            <td>{{ voter.svn_no }}</td>
+                            <td>{{ voter.caste|default:"-" }} ({{ voter.category|default:"-" }})</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-3">सभी सक्रिय मतदाताओं का सर्वे पूरा हो चुका है।</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg w-100">सर्वे सबमिट करें (Submit Survey)</button>
+    </form>
+</div>
+
+<script>
+    // Select All Checkbox Logic
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.voter-checkbox');
+        checkboxes.forEach(cb => {
+            if (cb.closest('tr').style.display !== 'none') {
+                cb.checked = this.checked;
+            }
+        });
+    });
+
+    // Live Search Filter
+    document.getElementById('voterSearch').addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#voterTable tbody tr');
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+</body>
+</html>

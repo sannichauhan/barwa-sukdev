@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>लाइव चुनाव परिणाम</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .top-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #0f172a;
+        }
+        .nav-links a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        .nav-links a:hover {
+            background-color: #1d4ed8;
+        }
+        .result-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+        }
+        .result-card h2 {
+            margin-top: 0;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-size: 14px;
+        }
+        .candidate-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .candidate-cell img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .vote-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .leader-badge {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-header">
+        <h1>📊 लाइव चुनाव परिणाम (Live Results)</h1>
+        <div class="nav-links">
+            <a href="{% url 'voter_login' %}">← मतदान लॉगिन पर जाएं</a>
+        </div>
+    </div>
+
+    <!-- General Category Results -->
+    <div class="result-card">
+        <h2>1. General कैटेगरी परिणाम</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>स्थान</th>
+                    <th>उम्मीदवार का नाम</th>
+                    <th>चुनाव चिन्ह</th>
+                    <th>कुल प्राप्त वोट</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in general_results %}
+                    <tr>
+                        <td><strong>#{{ forloop.counter }}</strong></td>
+                        <td>
+                            <div class="candidate-cell">
+                                {% if c.photo %}
+                                    <img src="{{ c.photo.url }}" alt="{{ c.name }}">
+                                {% endif %}
+                                <span>{{ c.name }}</span>
+                                {% if forloop.first and c.total_votes > 0 %}
+                                    <span class="leader-badge">🏆 आगे (Leading)</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ c.symbol_name|default:"-" }}</td>
+                        <td class="vote-count">{{ c.total_votes }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #64748b;">कोई उम्मीदवार उपलब्ध नहीं है।</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- OBC Category Results -->
+    <div class="result-card">
+        <h2>2. OBC कैटेगरी परिणाम</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>स्थान</th>
+                    <th>उम्मीदवार का नाम</th>
+                    <th>चुनाव चिन्ह</th>
+                    <th>कुल प्राप्त वोट</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in obc_results %}
+                    <tr>
+                        <td><strong>#{{ forloop.counter }}</strong></td>
+                        <td>
+                            <div class="candidate-cell">
+                                {% if c.photo %}
+                                    <img src="{{ c.photo.url }}" alt="{{ c.name }}">
+                                {% endif %}
+                                <span>{{ c.name }}</span>
+                                {% if forloop.first and c.total_votes > 0 %}
+                                    <span class="leader-badge">🏆 आगे (Leading)</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ c.symbol_name|default:"-" }}</td>
+                        <td class="vote-count">{{ c.total_votes }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #64748b;">कोई उम्मीदवार उपलब्ध नहीं है।</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

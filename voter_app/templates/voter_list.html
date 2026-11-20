@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>बरवा सुकदेव पंचायत चुनाव 2026 - मतदाता सूची एवं विश्लेषण</title>
+    <!-- Tailwind CSS CDN for Modern UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Top Header Bar -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                🗳️ बरवा सुकदेव पंचायत चुनाव 2026-2027
+            </h1>
+            <span class="bg-blue-700 px-3 py-1 rounded text-sm font-medium">
+                बरवा सुकदेव
+            </span>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+
+        <!-- Top 3 Summary Cards (जैसे इमेज में ऊपर दिए गए हैं) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            
+            <!-- कुल पंजीकृत मतदाता -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-blue-500 relative flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">कुल पंजीकृत मतदाता (Total Voters)</span>
+                    <div class="text-3xl font-extrabold text-blue-600 mt-1">{{ total_voters_count }}</div>
+                </div>
+                <div class="mt-4 flex justify-between items-center text-sm text-gray-600 font-medium">
+                    <span>♂ पुरुष: {{ male_count }}</span>
+                    <span>♀ महिला: {{ female_count }}</span>
+                </div>
+                <div class="absolute top-5 right-5 bg-blue-50 p-3 rounded-full text-blue-600">
+                    👥
+                </div>
+            </div>
+
+            <!-- Active Data -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-emerald-500 relative flex flex-col justify-between">
+    <div>
+        <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">सक्रिय डेटा (Active)</span>
+            <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded text-xs">{{ active_percentage|default:"0" }}%</span>
+        </div>
+        <div class="text-3xl font-extrabold text-emerald-600 mt-1">{{ active_count|default:"0" }}</div>
+    </div>
+    <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-emerald-500 h-2 rounded-full" style="width: {{ active_percentage|default:"0" }}%;"></div>
+    </div>
+</div>
+
+<!-- Inactive Data -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-amber-500 relative flex flex-col justify-between">
+    <div>
+        <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">निष्क्रिय डेटा (Inactive)</span>
+            <span class="text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded text-xs">{{ inactive_percentage|default:"0" }}%</span>
+        </div>
+        <div class="text-3xl font-extrabold text-amber-500 mt-1">{{ inactive_count|default:"0" }}</div>
+    </div>
+    <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-amber-400 h-2 rounded-full" style="width: {{ inactive_percentage|default:"0" }}%;"></div>
+    </div>
+    <div class="absolute top-5 right-5 bg-amber-50 p-3 rounded-full text-amber-500">
+        ⏸️
+    </div>
+</div>
+
+        </div>
+
+        <!-- Category Wise Cards Grid (General, OBC, SC, ST) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            
+            <!-- General Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-purple-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2.5 py-1 rounded-md">General</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ general_count }} <span class="text-xs text-gray-500 font-normal">({{ general_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">सामान्य वर्ग (General)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ general_male }}</span>
+                    <span>म: {{ general_female }}</span>
+                </div>
+            </div>
+
+            <!-- OBC Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-emerald-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-md">OBC</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ obc_count }} <span class="text-xs text-gray-500 font-normal">({{ obc_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">अन्य पिछड़ा वर्ग (OBC)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ obc_male }}</span>
+                    <span>म: {{ obc_female }}</span>
+                </div>
+            </div>
+
+            <!-- SC Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-amber-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-md">SC</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ sc_count }} <span class="text-xs text-gray-500 font-normal">({{ sc_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">अनुसूचित जाति (SC)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ sc_male }}</span>
+                    <span>म: {{ sc_female }}</span>
+                </div>
+            </div>
+
+            <!-- ST Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-rose-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-md">ST</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ st_count }} <span class="text-xs text-gray-500 font-normal">({{ st_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">अनुसूचित जनजाति (ST)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ st_male }}</span>
+                    <span>म: {{ st_female }}</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 🟢 जातिवार (Caste-wise) कार्ड्स सेक्शन -->
+        <div class="mb-4">
+            <h3 class="font-bold text-gray-700 text-base mb-3">🏷️ प्रमुख जातिवार आंकड़े (Caste Wise Breakdown)</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+
+            <!-- Lonia Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-emerald-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-md">लोनिया</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ lonia_count }} <span class="text-xs text-gray-500 font-normal">({{ lonia_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">लोनिया (Lonia)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ lonia_male }}</span>
+                    <span>म: {{ lonia_female }}</span>
+                </div>
+            </div>
+            
+            <!-- Bhumihar Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-indigo-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-md">भूमिहार</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ bhumihar_count }} <span class="text-xs text-gray-500 font-normal">({{ bhumihar_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">भूमिहार (Bhumihar)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ bhumihar_male }}</span>
+                    <span>म: {{ bhumihar_female }}</span>
+                </div>
+            </div>
+
+
+            <!-- Muslim Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-amber-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-md">मुस्लिम</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ muslim_count }} <span class="text-xs text-gray-500 font-normal">({{ muslim_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">मुस्लिम (Muslim)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ muslim_male }}</span>
+                    <span>म: {{ muslim_female }}</span>
+                </div>
+            </div>
+
+            
+
+             <!-- Prasad Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-teal-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-teal-100 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-md">प्रसाद</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ prasad_count }} <span class="text-xs text-gray-500 font-normal">({{ prasad_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">प्रसाद (Prasad)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ prasad_male }}</span>
+                    <span>म: {{ prasad_female }}</span>
+                </div>
+            </div>
+
+            <!-- Ahir Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md">अहीर/यादव</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ ahir_count }} <span class="text-xs text-gray-500 font-normal">({{ ahir_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">अहीर (Ahir/Yadav)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ ahir_male }}</span>
+                    <span>म: {{ ahir_female }}</span>
+                </div>
+            </div> 
+            
+            <!-- Pandit Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-purple-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2.5 py-1 rounded-md">ब्राह्मण</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ pandit_count }} <span class="text-xs text-gray-500 font-normal">({{ pandit_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">पंडित / ब्राह्मण (Pandit)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ pandit_male }}</span>
+                    <span>म: {{ pandit_female }}</span>
+                </div>
+            </div>
+
+            <!-- Gond Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-pink-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-1 rounded-md">गोंड</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ gond_count }} <span class="text-xs text-gray-500 font-normal">({{ gond_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">गोंड (Gond - ST)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ gond_male }}</span>
+                    <span>म: {{ gond_female }}</span>
+                </div>
+            </div>
+            
+           
+
+            <!-- Teli (Gupta) Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-cyan-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-cyan-100 text-cyan-700 text-xs font-bold px-2.5 py-1 rounded-md">तेली / गुप्ता</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ teli_count }} <span class="text-xs text-gray-500 font-normal">({{ teli_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">तेली / गुप्ता (Teli)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ teli_male }}</span>
+                    <span>म: {{ teli_female }}</span>
+                </div>
+            </div>
+
+            <!-- Patel (Kurmi) Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-orange-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-md">पटेल / कुर्मी</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ patel_count }} <span class="text-xs text-gray-500 font-normal">({{ patel_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">पटेल / कुर्मी (Kurmi)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ patel_male }}</span>
+                    <span>म: {{ patel_female }}</span>
+                </div>
+            </div>
+
+            <!-- Nishad Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-sky-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-sky-100 text-sky-700 text-xs font-bold px-2.5 py-1 rounded-md">निषाद</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ nishad_count }} <span class="text-xs text-gray-500 font-normal">({{ nishad_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">निषाद (Nishad)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ nishad_male }}</span>
+                    <span>म: {{ nishad_female }}</span>
+                </div>
+            </div>
+
+            <!-- Gosai Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-violet-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-violet-100 text-violet-700 text-xs font-bold px-2.5 py-1 rounded-md">गोसाई</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ gosai_count }} <span class="text-xs text-gray-500 font-normal">({{ gosai_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">गोसाई (Gosai)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ gosai_male }}</span>
+                    <span>म: {{ gosai_female }}</span>
+                </div>
+            </div>
+
+            <!-- Kamkar Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-t-4 border-lime-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-lime-100 text-lime-700 text-xs font-bold px-2.5 py-1 rounded-md">कमकर</span>
+                        <span class="text-sm font-extrabold text-gray-800">{{ kamkar_count }} <span class="text-xs text-gray-500 font-normal">({{ kamkar_share }}%)</span></span>
+                    </div>
+                    <h4 class="font-bold text-gray-800 text-base">कमकर (Kamkar)</h4>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500 font-medium">
+                    <span>पु: {{ kamkar_male }}</span>
+                    <span>म: {{ kamkar_female }}</span>
+                </div>
+            </div>
+
+            
+
+        </div>
+
+
+        <!-- Excel Upload & Search Filter Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Upload Excel Card -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 md:col-span-1">
+                <h2 class="text-md font-bold mb-3 text-gray-700 flex items-center gap-2">📁 एक्सेल फ़ाइल अपलोड करें</h2>
+                <form method="POST" enctype="multipart/form-data" class="space-y-3">
+                    {% csrf_token %}
+                    <div>
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-200 text-sm">
+                        डेटा आयात करें (Import)
+                    </button>
+                </form>
+            </div>
+
+            <!-- Search & Filters Bar -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 md:col-span-2 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-md font-bold mb-1 text-gray-700">🔍 मतदाता खोजें और फ़िल्टर करें</h2>
+                    <p class="text-xs text-gray-500 mb-4">आप नाम से खोज सकते हैं या केटेगरी के आधार पर लिस्ट देख सकते हैं।</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" id="searchInput" placeholder="नाम, जाति या वार्ड खोजें..." class="px-4 py-2 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="categoryFilter" class="px-4 py-2 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">सभी वर्ग (All Categories)</option>
+                        <option value="General">General</option>
+                        <option value="OBC">OBC</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                    </select>
+                </div>
+            </div>
+        </div>  
+
+        <!-- Voter List Table Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+        <h3 class="font-bold text-gray-800 text-base">📋 सभी मतदाताओं का विवरण</h3>
+        <div class="flex items-center gap-3">
+            <button onclick="resetFilters()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded-lg transition font-medium">
+                🔄 फ़िल्टर रीसेट करें
+            </button>
+            <span class="text-xs text-gray-400 font-medium">
+                कुल रिकॉर्ड्स: <span id="visibleCount">{{ voters.count }}</span> / {{ voters.count }}
+            </span>
+        </div>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse" id="voterTable">
+            <thead>
+                <!-- कॉलम हेडिंग्स -->
+                <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider font-semibold">
+                    <th class="py-3 px-4 border-b">क्र.सं. (Sr)</th>
+                    <th class="py-3 px-4 border-b">मकान नं.</th>
+                    <th class="py-3 px-4 border-b">मतदाता का नाम</th>
+                    <th class="py-3 px-4 border-b">अभिभावक का नाम</th>
+                    <th class="py-3 px-4 border-b">लिंग / आयु</th>
+                    <th class="py-3 px-4 border-b">वर्ग (Category)</th>
+                    <th class="py-3 px-4 border-b">जाति (Caste)</th>
+                </tr>
+                <!-- फ़िल्टर इनपुट रो (हर कॉलम के लिए) -->
+                <tr class="bg-gray-50/70 border-b border-gray-200">
+                    <th class="p-2">
+                        <input type="text" onkeyup="filterTable()" placeholder="क्र.सं..." class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal">
+                    </th>
+                    <th class="p-2">
+                        <input type="text" onkeyup="filterTable()" placeholder="मकान नं..." class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal">
+                    </th>
+                    <th class="p-2">
+                        <input type="text" onkeyup="filterTable()" placeholder="नाम खोजें..." class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal">
+                    </th>
+                    <th class="p-2">
+                        <input type="text" onkeyup="filterTable()" placeholder="अभिभावक..." class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal">
+                    </th>
+                    <th class="p-2">
+                        <input type="text" onkeyup="filterTable()" placeholder="लिंग / आयु..." class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal">
+                    </th>
+                    <th class="p-2">
+                        <select onchange="filterTable()" class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal bg-white">
+                            <option value="">सभी वर्ग</option>
+                            <option value="General">General</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="N/A">N/A</option>
+                        </select>
+                    </th>
+                    <th class="p-2">
+                        <input type="text" onkeyup="filterTable()" placeholder="जाति खोजें..." class="column-filter w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-normal">
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="voterTableBody" class="text-gray-600 text-sm divide-y divide-gray-100">
+                {% for voter in voters %}
+                <tr class="voter-row hover:bg-gray-50/50 transition duration-150">
+                    <td class="py-3 px-4 text-xs font-medium text-gray-500">{{ voter.sr_no }}</td>
+                    <td class="py-3 px-4 text-xs">{{ voter.house_no }}</td>
+                    <td class="py-3 px-4 font-bold text-gray-800">{{ voter.voter_name }}</td>
+                    <td class="py-3 px-4 text-xs text-gray-600">{{ voter.guardian_name }}</td>
+                    <td class="py-3 px-4 text-xs">{{ voter.gender|default:"-" }} / {{ voter.age|default:"-" }}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold 
+                            {% if voter.category == 'General' %} bg-purple-100 text-purple-700
+                            {% elif voter.category == 'OBC' %} bg-emerald-100 text-emerald-700
+                            {% elif voter.category == 'SC' %} bg-amber-100 text-amber-700
+                            {% elif voter.category == 'ST' %} bg-rose-100 text-rose-700
+                            {% else %} bg-gray-100 text-gray-700 {% endif %}">
+                            {{ voter.category|default:"N/A" }}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 font-semibold text-gray-700 text-xs">{{ voter.caste|default:"N/A" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-8 text-gray-400 text-sm">
+                        कोई मतदाता डेटा उपलब्ध नहीं है। कृपया ऊपर दिए गए विकल्प से एक्सेल फ़ाइल अपलोड करें।
+                    </td>
+                </tr>
+                {% endfor %}
+                
+                <!-- जब फ़िल्टर करने पर कोई डेटा न मिले -->
+                <tr id="noFilterResult" class="hidden">
+                    <td colspan="7" class="text-center py-8 text-gray-400 text-sm">
+                        इस फ़िल्टर से मिलता-जुलता कोई मतदाता नहीं मिला।
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+    </main>
+
+    <!-- JavaScript for Search and Category Filtering -->
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const tableRows = document.querySelectorAll('#voterTable tbody tr');
+
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                if (row.cells.length < 9) return; // Skip empty message row if present
+                const text = row.innerText.toLowerCase();
+                const categoryCell = row.cells[5] ? row.cells[5].innerText.toLowerCase() : '';
+
+                const matchesSearch = text.includes(searchTerm);
+                const matchesCategory = selectedCategory === "" || categoryCell.includes(selectedCategory);
+
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterTable);
+        categoryFilter.addEventListener('change', filterTable);
+    </script>
+
+    <script>
+function filterTable() {
+    const filters = document.querySelectorAll('.column-filter');
+    const rows = document.querySelectorAll('.voter-row');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let isMatch = true;
+
+        filters.forEach((filter, colIndex) => {
+            const filterValue = filter.value.trim().toLowerCase();
+            if (filterValue !== "") {
+                const cellText = cells[colIndex].textContent.trim().toLowerCase();
+                
+                // Category (Index 5) के लिए सटीक मैच, बाकी के लिए आंशिक (includes) मैच
+                if (colIndex === 5) {
+                    if (cellText !== filterValue) {
+                        isMatch = false;
+                    }
+                } else {
+                    if (!cellText.includes(filterValue)) {
+                        isMatch = false;
+                    }
+                }
+            }
+        });
+
+        if (isMatch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // लाइव काउंट अपडेट करें
+    const countElement = document.getElementById('visibleCount');
+    if (countElement) {
+        countElement.textContent = visibleCount;
+    }
+
+    // "कोई डेटा नहीं मिला" मैसेज दिखाएं या छुपाएं
+    const noResultRow = document.getElementById('noFilterResult');
+    if (rows.length > 0) {
+        if (visibleCount === 0) {
+            noResultRow.classList.remove('hidden');
+        } else {
+            noResultRow.classList.add('hidden');
+        }
+    }
+}
+
+function resetFilters() {
+    const filters = document.querySelectorAll('.column-filter');
+    filters.forEach(filter => filter.value = '');
+    filterTable();
+}
+</script>
+</body>
+</html>
