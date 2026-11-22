@@ -4,6 +4,8 @@ from django.db import IntegrityError
 from django.db import transaction
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
+from rest_framework import filters, viewsets
+from .serializers import CandidateSerializer, NewVoteSerializer, VoterSerializer
 from .forms import ExcelUploadForm, VoterForm
 from .models import (
     Candidate,
@@ -481,3 +483,59 @@ def survey_view(request):
         "voters": available_voters,
     }
     return render(request, "survey.html", context)
+
+class VoterViewSet(viewsets.ModelViewSet):
+    queryset = Voter.objects.all().order_by("id")
+    serializer_class = VoterSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["voter_name", "svn_no", "house_no", "sr_no", "caste", "category"]
+    ordering_fields = ["id", "sr_no", "voter_name", "age"]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        svn_no = self.request.query_params.get("svn_no")
+        status = self.request.query_params.get("status")
+        category = self.request.query_params.get("category")
+
+        if svn_no:
+            qs = qs.filter(svn_no__iexact=svn_no)
+        if status:
+            qs = qs.filter(status=status)
+        if category:
+            qs = qs.filter(category__iexact=category)
+        return qs
+
+
+class CandidateViewSet(viewsets.ModelViewSet):
+    serializer_class = CandidateSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["name", "symbol_name"]
+    ordering_fields = ["id", "name", "vote_count"]
+
+    def get_queryset(self):
+        qs = Candidate.objects.annotate(vote_count=Count("new_votes")).order_by("id")
+        election_category = self.request.query_params.get("election_category")
+        if election_category:
+            qs = qs.filter(election_category=election_category)
+        return qs
+
+
+class NewVoteViewSet(viewsets.ModelViewSet):
+    queryset = NewVote.objects.select_related("voter", "candidate").order_by("-voted_at")
+    serializer_class = NewVoteSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["id", "voted_at"]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        voter_id = self.request.query_params.get("voter")
+        svn_no = self.request.query_params.get("svn_no")
+        election_category = self.request.query_params.get("election_category")
+
+        if voter_id:
+            qs = qs.filter(voter_id=voter_id)
+        if svn_no:
+            qs = qs.filter(voter__svn_no__iexact=svn_no)
+        if election_category:
+            qs = qs.filter(election_category=election_category)
+        return qs
