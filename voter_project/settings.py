@@ -11,7 +11,15 @@ SECRET_KEY = os.environ.get(
 
 ROOT_URLCONF = 'voter_project.urls'
 
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+# DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+
+DEBUG = True
+ALLOWED_HOSTS = [
+    "navchetanapublicschool.com",
+    "www.navchetanapublicschool.com",
+    "server17213-10344.hostingprovider.com",
+    "*"
+]
 
 
 
@@ -40,10 +48,21 @@ MIDDLEWARE = [
 ]
 
 # Uses DATABASE_URL on Vercel, falls back to SQLite locally
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'navcheta_barwa_sukdev',
+        'USER': 'navcheta_barwasukdev',
+        'PASSWORD': 'cqu8mMa,0zMa&5hj',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
