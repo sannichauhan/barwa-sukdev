@@ -15,8 +15,8 @@ ROOT_URLCONF = 'voter_project.urls'
 
 DEBUG = True
 ALLOWED_HOSTS = [
-    "navchetanapublicschool.com",
-    "www.navchetanapublicschool.com",
+    "barwasukdev.help",
+    "www.barwasukdev.help",
     "server17213-10344.hostingprovider.com",
     "*"
 ]
