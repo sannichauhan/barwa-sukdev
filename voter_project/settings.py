@@ -13,8 +13,7 @@ ROOT_URLCONF = 'voter_project.urls'
 
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
 
